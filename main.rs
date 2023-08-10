@@ -12,7 +12,6 @@ enum InstructionType {
     PRINT,
     INPUT,  // User input
     LABEL,
-    EXIT,
     J,      // Jump
     JE,     // Jump if equal
     JN,     // Jump if not equal
@@ -31,11 +30,12 @@ impl StackMachine {
     fn get_pointer(&self, label: &String) -> usize {
         let mut p : usize = 0;
         for i in &self.instructions {
-            p += 1;
+
             if i.label == *label && i._type == InstructionType::LABEL
             {
                 return p;
             }
+            p += 1;
         }
         panic!("Label '{}' is not found", *label);
     }
@@ -83,18 +83,15 @@ fn main() {
             Some(&"div") => {
                 sm.instructions.push(Box::new(Instruction { _type: InstructionType::DIV, value: 0, label: String::from("") }));
             },
-            Some(&"prt") => {
+            Some(&"print") => {
                 sm.instructions.push(Box::new(Instruction { _type: InstructionType::PRINT, value: 0, label: String::from("") }));
             },
-            Some(&"ipt") => {
+            Some(&"input") => {
                 sm.instructions.push(Box::new(Instruction { _type: InstructionType::INPUT, value: 0, label: String::from("") }));
             },
-            Some(&"lbl") => {
+            Some(&"label") => {
                 let label = sections.get(1).expect("Lbl argument missing");
                 sm.instructions.push(Box::new(Instruction { _type: InstructionType::LABEL, value: 0, label: label.to_string() }));
-            },
-            Some(&"exit") => {
-                sm.instructions.push(Box::new(Instruction { _type: InstructionType::EXIT, value: 0, label: String::from("") }));
             },
             Some(&"j") => {
                 let label = sections.get(1).expect("J argument missing");
@@ -180,10 +177,6 @@ fn main() {
             }
             InstructionType::LABEL => {
                 pointer += 1;
-                print!("Label: {}\n", instruction.label)
-            }
-            InstructionType::EXIT => {
-                pointer = max_count;
             }
             InstructionType::J => {
                 pointer = sm.get_pointer(&instruction.label);

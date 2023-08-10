@@ -1,6 +1,6 @@
 push 0
-lbl main
-prt
+label main
+print
 push 1
 add
 push 10

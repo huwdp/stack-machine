@@ -1,4 +1,4 @@
-ipt
-ipt
+input
+input
 add
-prt
+print

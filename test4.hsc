@@ -1,3 +1,3 @@
-lbl main
+label main
 push 69
-prt
+print
