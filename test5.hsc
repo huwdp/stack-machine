@@ -4,4 +4,4 @@ prt
 push 1
 add
 push 10
-jl main
+jg main

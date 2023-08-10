@@ -12,7 +12,14 @@ enum InstructionType {
     PRINT,
     INPUT,  // User input
     LABEL,
+    EXIT,
+    J,      // Jump
+    JE,     // Jump if equal
+    JN,     // Jump if not equal
     JL,     // Jump if less than
+    JG,     // Jump if greater than
+    JLE,    // Jump if less than or equal
+    JGE     // Hump if greter than or equal
 }
 
 struct StackMachine {
@@ -23,19 +30,14 @@ struct StackMachine {
 impl StackMachine {
     fn get_pointer(&self, label: &String) -> usize {
         let mut p : usize = 0;
-        let max_count = &self.instructions.len();
         for i in &self.instructions {
             p += 1;
-            if i.label == *label
+            if i.label == *label && i._type == InstructionType::LABEL
             {
                 return p;
             }
         }
-        if p > *max_count
-        {
-            panic!(); // No label found
-        }
-        return 0;
+        panic!("Label '{}' is not found", *label);
     }
 }
 
@@ -91,10 +93,37 @@ fn main() {
                 let label = sections.get(1).expect("Lbl argument missing");
                 sm.instructions.push(Box::new(Instruction { _type: InstructionType::LABEL, value: 0, label: label.to_string() }));
             },
+            Some(&"exit") => {
+                sm.instructions.push(Box::new(Instruction { _type: InstructionType::EXIT, value: 0, label: String::from("") }));
+            },
+            Some(&"j") => {
+                let label = sections.get(1).expect("J argument missing");
+                sm.instructions.push(Box::new(Instruction { _type: InstructionType::J, value: 0, label: label.to_string() }));
+            },
+            Some(&"je") => {
+                let label = sections.get(1).expect("JE argument missing");
+                sm.instructions.push(Box::new(Instruction { _type: InstructionType::JE, value: 0, label: label.to_string() }));
+            },
+            Some(&"jn") => {
+                let label = sections.get(1).expect("JN argument missing");
+                sm.instructions.push(Box::new(Instruction { _type: InstructionType::JN, value: 0, label: label.to_string() }));
+            },
             Some(&"jl") => {
                 let label = sections.get(1).expect("JL argument missing");
                 sm.instructions.push(Box::new(Instruction { _type: InstructionType::JL, value: 0, label: label.to_string() }));
-            }
+            },
+            Some(&"jg") => {
+                let label = sections.get(1).expect("JG argument missing");
+                sm.instructions.push(Box::new(Instruction { _type: InstructionType::JG, value: 0, label: label.to_string() }));
+            },
+            Some(&"jle") => {
+                let label = sections.get(1).expect("JLE argument missing");
+                sm.instructions.push(Box::new(Instruction { _type: InstructionType::JLE, value: 0, label: label.to_string() }));
+            },
+            Some(&"jge") => {
+                let label = sections.get(1).expect("JGE argument missing");
+                sm.instructions.push(Box::new(Instruction { _type: InstructionType::JGE, value: 0, label: label.to_string() }));
+            },
             Some(&_) => todo!(),
             None => todo!()
         }
@@ -151,16 +180,77 @@ fn main() {
             }
             InstructionType::LABEL => {
                 pointer += 1;
+                print!("Label: {}\n", instruction.label)
+            }
+            InstructionType::EXIT => {
+                pointer = max_count;
+            }
+            InstructionType::J => {
+                pointer = sm.get_pointer(&instruction.label);
+            }
+            InstructionType::JE => {
+                let a = sm.stack.pop().expect("Stack underflow!");
+                let b = sm.stack.pop().expect("Stack underflow!");
+                sm.stack.push(b);
+                if b == a {
+                    pointer = sm.get_pointer(&instruction.label);
+                }
+                else {
+                    pointer += 1;
+                }
+            }
+            InstructionType::JN => {
+                let a = sm.stack.pop().expect("Stack underflow!");
+                let b = sm.stack.pop().expect("Stack underflow!");
+                sm.stack.push(b);
+                if b != a {
+                    pointer = sm.get_pointer(&instruction.label);
+                }
+                else {
+                    pointer += 1;
+                }
             }
             InstructionType::JL => {
                 let a = sm.stack.pop().expect("Stack underflow!");
                 let b = sm.stack.pop().expect("Stack underflow!");
-                if b < a {
-                    sm.stack.push(b);
+                sm.stack.push(b);
+                if a < b {
                     pointer = sm.get_pointer(&instruction.label);
                 }
                 else {
-                    sm.stack.push(b);
+                    pointer += 1;
+                }
+            }
+            InstructionType::JG => {
+                let a = sm.stack.pop().expect("Stack underflow!");
+                let b = sm.stack.pop().expect("Stack underflow!");
+                sm.stack.push(b);
+                if a > b {
+                    pointer = sm.get_pointer(&instruction.label);
+                }
+                else {
+                    pointer += 1;
+                }
+            }
+            InstructionType::JLE => {
+                let a = sm.stack.pop().expect("Stack underflow!");
+                let b = sm.stack.pop().expect("Stack underflow!");
+                sm.stack.push(b);
+                if a <= b {
+                    pointer = sm.get_pointer(&instruction.label);
+                }
+                else {
+                    pointer += 1;
+                }
+            }
+            InstructionType::JGE => {
+                let a = sm.stack.pop().expect("Stack underflow!");
+                let b = sm.stack.pop().expect("Stack underflow!");
+                sm.stack.push(b);
+                if a >= b {
+                    pointer = sm.get_pointer(&instruction.label);
+                }
+                else {
                     pointer += 1;
                 }
             }
