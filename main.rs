@@ -122,7 +122,6 @@ fn main() {
             InstructionType::INPUT => {
                 let mut line  = String::new();
                 std::io::stdin().read_line(&mut line).unwrap();
-                println!("{}", line);
                 let value : i32 = line.trim().parse().unwrap();
                 stack.push(value);
                 pointer += 1;
