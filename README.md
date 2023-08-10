@@ -10,6 +10,7 @@ A Basic stack machine implemented in Rust.
  - mul
  - div
  - prt
+ - ipt
 
 ## Usage
 ```

@@ -1,5 +1,6 @@
 use std::env;
 use std::fs;
+use std::io;
 
 enum InstructionType {
     PUSH,
@@ -7,13 +8,14 @@ enum InstructionType {
     SUB,
     MUL,
     DIV,
-    PRINT
+    PRINT,
+    INPUT,  // User input
 }
 
 struct Instruction
 {
     _type: InstructionType,
-    value: i32
+    value: i32,
 }
 
 fn main() {
@@ -52,6 +54,9 @@ fn main() {
             Some(&"prt") => {
                 instructions.push(Box::new(Instruction { _type: InstructionType::PRINT, value: 0 }));
             },
+            Some(&"ipt") => {
+                instructions.push(Box::new(Instruction { _type: InstructionType::INPUT, value: 0 }));
+            },
             Some(&_) => todo!(),
             None => todo!()
         }
@@ -86,6 +91,13 @@ fn main() {
                 let a = stack.pop();
                 println!("{}", a.expect("Stack underflow!"));
             },
+            InstructionType::INPUT => {
+                let mut line  = String::new();
+                std::io::stdin().read_line(&mut line).unwrap();
+                println!("{}", line);
+                let value : i32 = line.trim().parse().unwrap();
+                stack.push(value);
+            }
         }
     }
 }
