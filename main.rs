@@ -15,6 +15,30 @@ enum InstructionType {
     JL,     // Jump if less than
 }
 
+struct StackMachine {
+    instructions: Vec<Box<Instruction>>,
+    stack: Vec<i32>
+}
+
+impl StackMachine {
+    fn get_pointer(&self, label: &String) -> usize {
+        let mut p : usize = 0;
+        let max_count = &self.instructions.len();
+        for i in &self.instructions {
+            p += 1;
+            if i.label == *label
+            {
+                return p;
+            }
+        }
+        if p > *max_count
+        {
+            panic!(); // No label found
+        }
+        return 0;
+    }
+}
+
 struct Instruction
 {
     _type: InstructionType,
@@ -24,8 +48,7 @@ struct Instruction
 
 fn main() {
     let args: Vec<String> = env::args().collect();
-    let mut instructions: Vec<Box<Instruction>> = Vec::new();
-    let mut stack: Vec<i32> = Vec::new();
+    let mut sm: StackMachine = StackMachine { instructions: Vec::new(), stack: Vec::new() };
     let file_path: &String = &args[1];
     println!("Welcome to Huw's Stack Machine");
     let content = fs::read_to_string(file_path).expect("Cannot read file");
@@ -41,36 +64,36 @@ fn main() {
             Some(&"push") => {
                 let value_input = sections.get(1).expect("Push argument missing");
                 let value = value_input.parse::<i32>().unwrap();
-                instructions.push(Box::new(Instruction { _type: InstructionType::PUSH, value: value, label: String::from("") }));
+                sm.instructions.push(Box::new(Instruction { _type: InstructionType::PUSH, value: value, label: String::from("") }));
             },
             Some(&"pop") => {
-                instructions.push(Box::new(Instruction { _type: InstructionType::POP, value: 0, label: String::from("") }));
+                sm.instructions.push(Box::new(Instruction { _type: InstructionType::POP, value: 0, label: String::from("") }));
             },
             Some(&"add") => {
-                instructions.push(Box::new(Instruction { _type: InstructionType::ADD, value: 0, label: String::from("") }));
+                sm.instructions.push(Box::new(Instruction { _type: InstructionType::ADD, value: 0, label: String::from("") }));
             },
             Some(&"sub") => {
-                instructions.push(Box::new(Instruction { _type: InstructionType::SUB, value: 0, label: String::from("") }));
+                sm.instructions.push(Box::new(Instruction { _type: InstructionType::SUB, value: 0, label: String::from("") }));
             },
             Some(&"mul") => {
-                instructions.push(Box::new(Instruction { _type: InstructionType::MUL, value: 0, label: String::from("") }));
+                sm.instructions.push(Box::new(Instruction { _type: InstructionType::MUL, value: 0, label: String::from("") }));
             },
             Some(&"div") => {
-                instructions.push(Box::new(Instruction { _type: InstructionType::DIV, value: 0, label: String::from("") }));
+                sm.instructions.push(Box::new(Instruction { _type: InstructionType::DIV, value: 0, label: String::from("") }));
             },
             Some(&"prt") => {
-                instructions.push(Box::new(Instruction { _type: InstructionType::PRINT, value: 0, label: String::from("") }));
+                sm.instructions.push(Box::new(Instruction { _type: InstructionType::PRINT, value: 0, label: String::from("") }));
             },
             Some(&"ipt") => {
-                instructions.push(Box::new(Instruction { _type: InstructionType::INPUT, value: 0, label: String::from("") }));
+                sm.instructions.push(Box::new(Instruction { _type: InstructionType::INPUT, value: 0, label: String::from("") }));
             },
             Some(&"lbl") => {
                 let label = sections.get(1).expect("Lbl argument missing");
-                instructions.push(Box::new(Instruction { _type: InstructionType::LABEL, value: 0, label: label.to_string() }));
+                sm.instructions.push(Box::new(Instruction { _type: InstructionType::LABEL, value: 0, label: label.to_string() }));
             },
             Some(&"jl") => {
                 let label = sections.get(1).expect("JL argument missing");
-                instructions.push(Box::new(Instruction { _type: InstructionType::JL, value: 0, label: label.to_string() }));
+                sm.instructions.push(Box::new(Instruction { _type: InstructionType::JL, value: 0, label: label.to_string() }));
             }
             Some(&_) => todo!(),
             None => todo!()
@@ -78,79 +101,66 @@ fn main() {
     }
 
     let mut pointer: usize = 0;
-    let max_count: usize = instructions.len();
+    let max_count: usize = sm.instructions.len();
     while pointer < max_count {
-        let instruction: &Box<Instruction> = instructions.get(pointer).unwrap();
+        let instruction: &Box<Instruction> = sm.instructions.get(pointer).unwrap();
         match instruction._type {
             InstructionType::PUSH => {
-                stack.push(instruction.value);
+                sm.stack.push(instruction.value);
                 pointer += 1;
             },
             InstructionType::POP => {
-                stack.pop();
+                sm.stack.pop();
             },
             InstructionType::ADD => {
-                let a = stack.pop().expect("Stack underflow!");
-                let b = stack.pop().expect("Stack underflow!");
-                stack.push(b+a);
+                let a = sm.stack.pop().expect("Stack underflow!");
+                let b = sm.stack.pop().expect("Stack underflow!");
+                sm.stack.push(b+a);
                 pointer += 1;
             },
             InstructionType::SUB => {
-                let a = stack.pop().expect("Stack underflow!");
-                let b = stack.pop().expect("Stack underflow!");
-                stack.push(b-a);
+                let a = sm.stack.pop().expect("Stack underflow!");
+                let b = sm.stack.pop().expect("Stack underflow!");
+                sm.stack.push(b-a);
                 pointer += 1;
             },
             InstructionType::MUL => {
-                let a = stack.pop().expect("Stack underflow!");
-                let b = stack.pop().expect("Stack underflow!");
-                stack.push(b*a);
+                let a = sm.stack.pop().expect("Stack underflow!");
+                let b = sm.stack.pop().expect("Stack underflow!");
+                sm.stack.push(b*a);
                 pointer += 1;
             },
             InstructionType::DIV => {
-                let a = stack.pop().expect("Stack underflow!");
-                let b = stack.pop().expect("Stack underflow!");
-                stack.push(b/a);
+                let a = sm.stack.pop().expect("Stack underflow!");
+                let b = sm.stack.pop().expect("Stack underflow!");
+                sm.stack.push(b/a);
                 pointer += 1;
             },
             InstructionType::PRINT => {
-                let a = stack.pop().expect("Stack underflow!");
+                let a = sm.stack.pop().expect("Stack underflow!");
                 println!("{}", a);
-                stack.push(a);
+                sm.stack.push(a);
                 pointer += 1;
             },
             InstructionType::INPUT => {
                 let mut line  = String::new();
                 std::io::stdin().read_line(&mut line).unwrap();
                 let value : i32 = line.trim().parse().unwrap();
-                stack.push(value);
+                sm.stack.push(value);
                 pointer += 1;
             }
             InstructionType::LABEL => {
                 pointer += 1;
             }
             InstructionType::JL => {
-                let a = stack.pop().expect("Stack underflow!");
-                let b = stack.pop().expect("Stack underflow!");
+                let a = sm.stack.pop().expect("Stack underflow!");
+                let b = sm.stack.pop().expect("Stack underflow!");
                 if b < a {
-                    // Find label and change pointer
-                    let mut p : usize = 0;
-                    for i in &instructions {
-                        p += 1;
-                        if i.label == instruction.label
-                        {
-                            break;
-                        }
-                    }
-                    if p > max_count
-                    {
-                        todo!(); // No label found
-                    }
-                    stack.push(b);
-                    pointer = p;
+                    sm.stack.push(b);
+                    pointer = sm.get_pointer(&instruction.label);
                 }
                 else {
-                    stack.push(b);
+                    sm.stack.push(b);
                     pointer += 1;
                 }
             }
