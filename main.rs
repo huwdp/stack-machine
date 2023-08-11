@@ -3,22 +3,22 @@ use std::fs;
 
 #[derive(PartialEq, Eq)]
 enum InstructionType {
-    PUSH,
-    POP,
-    ADD,
-    SUB,
-    MUL,
-    DIV,
-    PRINT,
-    INPUT,  // User input
-    LABEL,
-    J,      // Jump
-    JE,     // Jump if equal
-    JN,     // Jump if not equal
-    JL,     // Jump if less than
-    JG,     // Jump if greater than
-    JLE,    // Jump if less than or equal
-    JGE     // Jump if greter than or equal
+    PUSH,   // Push value onto stack.
+    POP,    // Pop value off top of stack.
+    ADD,    // Pop two off stack then add them and put onto stack.
+    SUB,    // Pop two off stack then substract them and put onto stack.
+    MUL,    // Pop two off stack then multiply them and put onto stack.
+    DIV,    // Pop two off stack then divide them and put onto stack.
+    PRINT,  // Print value on top of stack.
+    INPUT,  // Read user input and push value on stack.
+    LABEL,  // Label for jumps to change the instruction pointer to.
+    J,      // Jump to label
+    JE,     // Jump to label if equal
+    JN,     // Jump to label if not equal
+    JL,     // Jump to label if less than
+    JG,     // Jump to label if greater than
+    JLE,    // Jump to label if less than or equal
+    JGE     // Jump to label if greter than or equal
 }
 
 struct StackMachine {
@@ -187,10 +187,9 @@ fn main() {
                 sm.stack.push(first);
                 if second == first {
                     pointer = sm.get_pointer(&instruction.label);
+                    continue
                 }
-                else {
-                    pointer += 1;
-                }
+                pointer += 1;
             }
             InstructionType::JN => {
                 let second = sm.stack.pop().expect(&underflow_error);
@@ -198,10 +197,9 @@ fn main() {
                 sm.stack.push(first);
                 if first != second {
                     pointer = sm.get_pointer(&instruction.label);
+                    continue
                 }
-                else {
-                    pointer += 1;
-                }
+                pointer += 1;
             }
             InstructionType::JL => {
                 let second = sm.stack.pop().expect(&underflow_error);
@@ -209,10 +207,9 @@ fn main() {
                 sm.stack.push(first);
                 if first < second {
                     pointer = sm.get_pointer(&instruction.label);
+                    continue
                 }
-                else {
-                    pointer += 1;
-                }
+                pointer += 1;
             }
             InstructionType::JG => {
                 let second = sm.stack.pop().expect(&underflow_error);
@@ -220,10 +217,9 @@ fn main() {
                 sm.stack.push(first);
                 if first > second {
                     pointer = sm.get_pointer(&instruction.label);
+                    continue
                 }
-                else {
-                    pointer += 1;
-                }
+                pointer += 1;
             }
             InstructionType::JLE => {
                 let second = sm.stack.pop().expect(&underflow_error);
@@ -231,10 +227,9 @@ fn main() {
                 sm.stack.push(first);
                 if first <= second {
                     pointer = sm.get_pointer(&instruction.label);
+                    continue
                 }
-                else {
-                    pointer += 1;
-                }
+                pointer += 1;
             }
             InstructionType::JGE => {
                 let second = sm.stack.pop().expect(&underflow_error);
@@ -242,10 +237,9 @@ fn main() {
                 sm.stack.push(first);
                 if first >= second {
                     pointer = sm.get_pointer(&instruction.label);
+                    continue
                 }
-                else {
-                    pointer += 1;
-                }
+                pointer += 1;
             }
         }
     }
