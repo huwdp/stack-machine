@@ -18,7 +18,7 @@ enum InstructionType {
     JL,     // Jump if less than
     JG,     // Jump if greater than
     JLE,    // Jump if less than or equal
-    JGE     // Hump if greter than or equal
+    JGE     // Jump if greter than or equal
 }
 
 struct StackMachine {
@@ -26,11 +26,17 @@ struct StackMachine {
     stack: Vec<i32>
 }
 
+struct Instruction
+{
+    _type: InstructionType,
+    value: i32,
+    label: String
+}
+
 impl StackMachine {
     fn get_pointer(&self, label: &String) -> usize {
         let mut p : usize = 0;
         for i in &self.instructions {
-
             if i.label == *label && i._type == InstructionType::LABEL
             {
                 return p;
@@ -39,13 +45,6 @@ impl StackMachine {
         }
         panic!("Label '{}' is not found", *label);
     }
-}
-
-struct Instruction
-{
-    _type: InstructionType,
-    value: i32,
-    label: String
 }
 
 fn main() {
@@ -127,8 +126,8 @@ fn main() {
     }
 
     let mut pointer: usize = 0;
-    let max_count: usize = sm.instructions.len();
-    while pointer < max_count {
+    let size: usize = sm.instructions.len();
+    while pointer < size {
         let instruction: &Box<Instruction> = sm.instructions.get(pointer).unwrap();
         match instruction._type {
             InstructionType::PUSH => {

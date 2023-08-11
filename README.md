@@ -6,7 +6,7 @@ A Basic stack machine implemented in Rust.
 
 *int = integer number*
 
-Stack contains a list of integers. We run an instruction to interact with the stack. So for example `push 1` will add 1 to stack list. `pop` will remove the top (1) from the stack.
+Stack contains a list of integers. We run an instruction to interact with the stack. So for example `push 1` will add 1 to stack list. `pop` will remove the top (value: 1) from the stack.
 
 | Instruction     | Description                                                                                               |
 | ----------------| ----------------------------------------------------------------------------------------------------------|
