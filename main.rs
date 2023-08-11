@@ -51,6 +51,7 @@ fn main() {
     let args: Vec<String> = env::args().collect();
     let mut sm: StackMachine = StackMachine { instructions: Vec::new(), stack: Vec::new() };
     let file_path: &String = &args[1];
+    let underflow_error: String = String::from("Stack underflow!");
     println!("Welcome to Huw's Stack Machine");
     let content = fs::read_to_string(file_path).expect("Cannot read file");
     let lines = content.split("\n");
@@ -138,33 +139,33 @@ fn main() {
                 sm.stack.pop();
             },
             InstructionType::ADD => {
-                let a = sm.stack.pop().expect("Stack underflow!");
-                let b = sm.stack.pop().expect("Stack underflow!");
-                sm.stack.push(b+a);
+                let second = sm.stack.pop().expect(&underflow_error);
+                let first = sm.stack.pop().expect(&underflow_error);
+                sm.stack.push(first+second);
                 pointer += 1;
             },
             InstructionType::SUB => {
-                let a = sm.stack.pop().expect("Stack underflow!");
-                let b = sm.stack.pop().expect("Stack underflow!");
-                sm.stack.push(b-a);
+                let second = sm.stack.pop().expect(&underflow_error);
+                let first = sm.stack.pop().expect(&underflow_error);
+                sm.stack.push(first-second);
                 pointer += 1;
             },
             InstructionType::MUL => {
-                let a = sm.stack.pop().expect("Stack underflow!");
-                let b = sm.stack.pop().expect("Stack underflow!");
-                sm.stack.push(b*a);
+                let second = sm.stack.pop().expect(&underflow_error);
+                let first = sm.stack.pop().expect(&underflow_error);
+                sm.stack.push(first*second);
                 pointer += 1;
             },
             InstructionType::DIV => {
-                let a = sm.stack.pop().expect("Stack underflow!");
-                let b = sm.stack.pop().expect("Stack underflow!");
-                sm.stack.push(b/a);
+                let second = sm.stack.pop().expect(&underflow_error);
+                let first = sm.stack.pop().expect(&underflow_error);
+                sm.stack.push(first/second);
                 pointer += 1;
             },
             InstructionType::PRINT => {
-                let a = sm.stack.pop().expect("Stack underflow!");
-                println!("{}", a);
-                sm.stack.push(a);
+                let top = sm.stack.pop().expect(&underflow_error);
+                println!("{}", top);
+                sm.stack.push(top);
                 pointer += 1;
             },
             InstructionType::INPUT => {
@@ -181,10 +182,10 @@ fn main() {
                 pointer = sm.get_pointer(&instruction.label);
             }
             InstructionType::JE => {
-                let a = sm.stack.pop().expect("Stack underflow!");
-                let b = sm.stack.pop().expect("Stack underflow!");
-                sm.stack.push(b);
-                if b == a {
+                let second = sm.stack.pop().expect(&underflow_error);
+                let first = sm.stack.pop().expect(&underflow_error);
+                sm.stack.push(first);
+                if second == first {
                     pointer = sm.get_pointer(&instruction.label);
                 }
                 else {
@@ -192,10 +193,10 @@ fn main() {
                 }
             }
             InstructionType::JN => {
-                let a = sm.stack.pop().expect("Stack underflow!");
-                let b = sm.stack.pop().expect("Stack underflow!");
-                sm.stack.push(b);
-                if b != a {
+                let second = sm.stack.pop().expect(&underflow_error);
+                let first = sm.stack.pop().expect(&underflow_error);
+                sm.stack.push(first);
+                if first != second {
                     pointer = sm.get_pointer(&instruction.label);
                 }
                 else {
@@ -203,10 +204,10 @@ fn main() {
                 }
             }
             InstructionType::JL => {
-                let a = sm.stack.pop().expect("Stack underflow!");
-                let b = sm.stack.pop().expect("Stack underflow!");
-                sm.stack.push(b);
-                if a < b {
+                let second = sm.stack.pop().expect(&underflow_error);
+                let first = sm.stack.pop().expect(&underflow_error);
+                sm.stack.push(first);
+                if first < second {
                     pointer = sm.get_pointer(&instruction.label);
                 }
                 else {
@@ -214,10 +215,10 @@ fn main() {
                 }
             }
             InstructionType::JG => {
-                let a = sm.stack.pop().expect("Stack underflow!");
-                let b = sm.stack.pop().expect("Stack underflow!");
-                sm.stack.push(b);
-                if a > b {
+                let second = sm.stack.pop().expect(&underflow_error);
+                let first = sm.stack.pop().expect(&underflow_error);
+                sm.stack.push(first);
+                if first > second {
                     pointer = sm.get_pointer(&instruction.label);
                 }
                 else {
@@ -225,10 +226,10 @@ fn main() {
                 }
             }
             InstructionType::JLE => {
-                let a = sm.stack.pop().expect("Stack underflow!");
-                let b = sm.stack.pop().expect("Stack underflow!");
-                sm.stack.push(b);
-                if a <= b {
+                let second = sm.stack.pop().expect(&underflow_error);
+                let first = sm.stack.pop().expect(&underflow_error);
+                sm.stack.push(first);
+                if first <= second {
                     pointer = sm.get_pointer(&instruction.label);
                 }
                 else {
@@ -236,10 +237,10 @@ fn main() {
                 }
             }
             InstructionType::JGE => {
-                let a = sm.stack.pop().expect("Stack underflow!");
-                let b = sm.stack.pop().expect("Stack underflow!");
-                sm.stack.push(b);
-                if a >= b {
+                let second = sm.stack.pop().expect(&underflow_error);
+                let first = sm.stack.pop().expect(&underflow_error);
+                sm.stack.push(first);
+                if first >= second {
                     pointer = sm.get_pointer(&instruction.label);
                 }
                 else {

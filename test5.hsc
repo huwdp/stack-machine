@@ -4,4 +4,4 @@ print
 push 1
 add
 push 10
-jg main
+jl main

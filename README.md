@@ -1,6 +1,6 @@
 
 # Huw's Stack Machine
-A Basic stack machine implemented in Rust.
+A basic stack machine implemented in Rust.
 
 ## Instructions
 
@@ -10,21 +10,21 @@ Stack contains a list of integers. We run an instruction to interact with the st
 
 | Instruction     | Description                                                                                               |
 | ----------------| ----------------------------------------------------------------------------------------------------------|
-| add             | Pop two off stack, add the two and push back onto stack.                                                  |
-| sub             | Pop two off stack, subtract the two and push back onto stack.                                             |
-| mul             | Pop two off stack, multiply the two and push back onto stack.                                             |
-| div             | Pop two off stack, divide the two and push back onto stack.                                               |
-| push <INTEGER>  | Push int onto stack.                                                                                      |
+| add             | Pop two off stack, add the two and push new value onto stack.                                             |
+| sub             | Pop two off stack, subtract the two and new value push onto stack.                                        |
+| mul             | Pop two off stack, multiply the two and new value push onto stack.                                        |
+| div             | Pop two off stack, divide the two and push new value onto stack.                                          |
+| push `<INTEGER>`  | Push int onto stack.                                                                                    |
 | pop             | Pop int onto stack.                                                                                       |
 | print           | Print top of stack.                                                                                       |
-| j <LABEL>       | Used as locations for jumps.                                                                              |
-| j <LABEL>       | Jump to label.                                                                                            |
-| je <LABEL>      | Pop two off stack. If the two are equal then jump to label.                                               |
-| jn <LABEL>      | Pop two off stack. If the two are not equal then jump to label.                                           |
-| jg <LABEL>      | Pop two off stack. If the first int is greater than the second int, then jump to label.                   |
-| jge <LABEL>     | Pop two off stack. If the first int is greater than or equal to the second int, then jump to label.       |
-| jl <LABEL>      | Pop two off stack. If the first int is less than the second int, then jump to label.                      |
-| jle <LABEL>     | Pop two off stack. If the first int is less than or equal to the second int, then jump to label.          |
+| label `<LABEL>`   | Used as locations for jumps.                                                                            |
+| j `<LABEL>`       | Jump to label.                                                                                          |
+| je `<LABEL>`      | Pop two off stack. If the two are equal then jump to label.                                             |
+| jn `<LABEL>`      | Pop two off stack. If the two are not equal then jump to label.                                         |
+| jg `<LABEL>`      | Pop two off stack. If the first int is greater than the second int, then jump to label.                 |
+| jge `<LABEL>`     | Pop two off stack. If the first int is greater than or equal to the second int, then jump to label.     |
+| jl `<LABEL>`      | Pop two off stack. If the first int is less than the second int, then jump to label.                    |
+| jle `<LABEL>`    | Pop two off stack. If the first int is less than or equal to the second int, then jump to label.         |
 
 ## Example
 ```
@@ -34,8 +34,7 @@ print
 push 1
 add
 push 10
-jg main
-
+jl main
 ```
 The example above prints a list of numbers from 0 to 9.
 
