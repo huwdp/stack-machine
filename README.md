@@ -15,7 +15,7 @@ Stack contains a list of integers. We run an instruction to interact with the st
 | mul             | Pop two off stack, multiply the two and new value push onto stack.                                        |
 | div             | Pop two off stack, divide the two and push new value onto stack.                                          |
 | push `<INTEGER>`  | Push int onto stack.                                                                                    |
-| pop             | Pop int onto stack.                                                                                       |
+| pop             | Pop int off  stack.                                                                                       |
 | print           | Print top of stack.                                                                                       |
 | label `<LABEL>`   | Used as locations for jumps.                                                                            |
 | j `<LABEL>`       | Jump to label.                                                                                          |
