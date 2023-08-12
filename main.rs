@@ -1,24 +1,26 @@
 use std::env;
 use std::fs;
+use std::convert::TryInto;
 
 #[derive(PartialEq, Eq)]
 enum InstructionType {
-    PUSH,   // Push value onto stack.
-    POP,    // Pop value off top of stack.
-    ADD,    // Pop two off stack then add them and put onto stack.
-    SUB,    // Pop two off stack then substract them and put onto stack.
-    MUL,    // Pop two off stack then multiply them and put onto stack.
-    DIV,    // Pop two off stack then divide them and put onto stack.
-    PRINT,  // Print value on top of stack.
-    INPUT,  // Read user input and push value on stack.
-    LABEL,  // Label for jumps to change the instruction pointer to.
-    J,      // Jump to label
-    JE,     // Jump to label if equal
-    JN,     // Jump to label if not equal
-    JL,     // Jump to label if less than
-    JG,     // Jump to label if greater than
-    JLE,    // Jump to label if less than or equal
-    JGE     // Jump to label if greter than or equal
+    PUSH,       // Push value onto stack.
+    POP,        // Pop value off top of stack.
+    ADD,        // Pop two off stack then add them and put onto stack.
+    SUB,        // Pop two off stack then substract them and put onto stack.
+    MUL,        // Pop two off stack then multiply them and put onto stack.
+    DIV,        // Pop two off stack then divide them and put onto stack.
+    PRINT,      // Print value on top of stack.
+    PRINTASCII, // Print ASCII character on top of stack.
+    INPUT,      // Read user input and push value on stack.
+    LABEL,      // Label for jumps to change the instruction pointer to.
+    J,          // Jump to label
+    JE,         // Jump to label if equal
+    JN,         // Jump to label if not equal
+    JL,         // Jump to label if less than
+    JG,         // Jump to label if greater than
+    JLE,        // Jump to label if less than or equal
+    JGE         // Jump to label if greter than or equal
 }
 
 struct StackMachine {
@@ -86,6 +88,9 @@ fn main() {
             Some(&"print") => {
                 sm.instructions.push(Box::new(Instruction { _type: InstructionType::PRINT, value: 0, label: String::from("") }));
             },
+            Some(&"printAscii") => {
+                sm.instructions.push(Box::new(Instruction { _type: InstructionType::PRINTASCII, value: 0, label: String::from("") }));
+            },
             Some(&"input") => {
                 sm.instructions.push(Box::new(Instruction { _type: InstructionType::INPUT, value: 0, label: String::from("") }));
             },
@@ -137,6 +142,7 @@ fn main() {
             },
             InstructionType::POP => {
                 sm.stack.pop();
+                pointer += 1;
             },
             InstructionType::ADD => {
                 let second = sm.stack.pop().expect(&underflow_error);
@@ -165,6 +171,12 @@ fn main() {
             InstructionType::PRINT => {
                 let top = sm.stack.pop().expect(&underflow_error);
                 println!("{}", top);
+                sm.stack.push(top);
+                pointer += 1;
+            },
+            InstructionType::PRINTASCII => {
+                let top = sm.stack.pop().expect(&underflow_error);
+                println!("{}", char::from_u32(top.try_into().unwrap()).unwrap());
                 sm.stack.push(top);
                 pointer += 1;
             },
