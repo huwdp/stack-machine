@@ -135,60 +135,51 @@ fn main() {
     let size: usize = sm.instructions.len();
     while pointer < size {
         let instruction: &Box<Instruction> = sm.instructions.get(pointer).unwrap();
+        pointer += 1;
         match instruction._type {
             InstructionType::PUSH => {
                 sm.stack.push(instruction.value);
-                pointer += 1;
             },
             InstructionType::POP => {
                 sm.stack.pop();
-                pointer += 1;
             },
             InstructionType::ADD => {
                 let second = sm.stack.pop().expect(&underflow_error);
                 let first = sm.stack.pop().expect(&underflow_error);
                 sm.stack.push(first+second);
-                pointer += 1;
             },
             InstructionType::SUB => {
                 let second = sm.stack.pop().expect(&underflow_error);
                 let first = sm.stack.pop().expect(&underflow_error);
                 sm.stack.push(first-second);
-                pointer += 1;
             },
             InstructionType::MUL => {
                 let second = sm.stack.pop().expect(&underflow_error);
                 let first = sm.stack.pop().expect(&underflow_error);
                 sm.stack.push(first*second);
-                pointer += 1;
             },
             InstructionType::DIV => {
                 let second = sm.stack.pop().expect(&underflow_error);
                 let first = sm.stack.pop().expect(&underflow_error);
                 sm.stack.push(first/second);
-                pointer += 1;
             },
             InstructionType::PRINT => {
                 let top = sm.stack.pop().expect(&underflow_error);
                 println!("{}", top);
                 sm.stack.push(top);
-                pointer += 1;
             },
             InstructionType::PRINTASCII => {
                 let top = sm.stack.pop().expect(&underflow_error);
                 println!("{}", char::from_u32(top.try_into().unwrap()).unwrap());
                 sm.stack.push(top);
-                pointer += 1;
             },
             InstructionType::INPUT => {
                 let mut line  = String::new();
                 std::io::stdin().read_line(&mut line).unwrap();
                 let value : i32 = line.trim().parse().unwrap();
                 sm.stack.push(value);
-                pointer += 1;
             }
             InstructionType::LABEL => {
-                pointer += 1;
             }
             InstructionType::J => {
                 pointer = sm.get_pointer(&instruction.label);
@@ -201,7 +192,6 @@ fn main() {
                     pointer = sm.get_pointer(&instruction.label);
                     continue
                 }
-                pointer += 1;
             }
             InstructionType::JN => {
                 let second = sm.stack.pop().expect(&underflow_error);
@@ -211,7 +201,6 @@ fn main() {
                     pointer = sm.get_pointer(&instruction.label);
                     continue
                 }
-                pointer += 1;
             }
             InstructionType::JL => {
                 let second = sm.stack.pop().expect(&underflow_error);
@@ -221,7 +210,6 @@ fn main() {
                     pointer = sm.get_pointer(&instruction.label);
                     continue
                 }
-                pointer += 1;
             }
             InstructionType::JG => {
                 let second = sm.stack.pop().expect(&underflow_error);
@@ -231,7 +219,6 @@ fn main() {
                     pointer = sm.get_pointer(&instruction.label);
                     continue
                 }
-                pointer += 1;
             }
             InstructionType::JLE => {
                 let second = sm.stack.pop().expect(&underflow_error);
@@ -241,7 +228,6 @@ fn main() {
                     pointer = sm.get_pointer(&instruction.label);
                     continue
                 }
-                pointer += 1;
             }
             InstructionType::JGE => {
                 let second = sm.stack.pop().expect(&underflow_error);
@@ -251,7 +237,6 @@ fn main() {
                     pointer = sm.get_pointer(&instruction.label);
                     continue
                 }
-                pointer += 1;
             }
         }
     }
