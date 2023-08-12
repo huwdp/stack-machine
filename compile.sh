@@ -1,1 +1,1 @@
-rustc main.rs
+rustc main.rs -C opt-level=3
