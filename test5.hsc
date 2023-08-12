@@ -1,6 +1,6 @@
 push 0
 label main
-print
+printLine
 push 1
 add
 push 10

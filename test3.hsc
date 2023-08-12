@@ -1,4 +1,4 @@
 input
 input
 add
-print
+printLine

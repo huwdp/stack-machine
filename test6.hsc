@@ -40,4 +40,4 @@ j end
 
 label end
 push 69
-print
+printLine

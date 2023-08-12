@@ -5,4 +5,4 @@ push 3
 mul
 push 2
 div
-print
+printLine

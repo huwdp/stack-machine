@@ -11,6 +11,7 @@ enum InstructionType {
     MUL,        // Pop two off stack then multiply them and put onto stack.
     DIV,        // Pop two off stack then divide them and put onto stack.
     PRINT,      // Print value on top of stack.
+    PRINTLINE,  // Print line of value on top of stack.
     PRINTASCII, // Print ASCII character on top of stack.
     INPUT,      // Read user input and push value on stack.
     LABEL,      // Label for jumps to change the instruction pointer to.
@@ -87,6 +88,9 @@ fn main() {
             },
             Some(&"print") => {
                 sm.instructions.push(Box::new(Instruction { _type: InstructionType::PRINT, value: 0, label: String::from("") }));
+            },
+            Some(&"printLine") => {
+                sm.instructions.push(Box::new(Instruction { _type: InstructionType::PRINTLINE, value: 0, label: String::from("") }));
             },
             Some(&"printAscii") => {
                 sm.instructions.push(Box::new(Instruction { _type: InstructionType::PRINTASCII, value: 0, label: String::from("") }));
@@ -165,12 +169,17 @@ fn main() {
             },
             InstructionType::PRINT => {
                 let top = sm.stack.pop().expect(&underflow_error);
+                print!("{}", top);
+                sm.stack.push(top);
+            },
+            InstructionType::PRINTLINE => {
+                let top = sm.stack.pop().expect(&underflow_error);
                 println!("{}", top);
                 sm.stack.push(top);
             },
             InstructionType::PRINTASCII => {
                 let top = sm.stack.pop().expect(&underflow_error);
-                println!("{}", char::from_u32(top.try_into().unwrap()).unwrap());
+                print!("{}", char::from_u32(top.try_into().unwrap()).unwrap());
                 sm.stack.push(top);
             },
             InstructionType::INPUT => {
