@@ -14,19 +14,25 @@ Stack contains a list of integers. We run an instruction to interact with the st
 | sub              | Pop two off stack, subtract the two and new value push onto stack.                                        |
 | mul              | Pop two off stack, multiply the two and new value push onto stack.                                        |
 | div              | Pop two off stack, divide the two and push new value onto stack.                                          |
-| push `<INTEGER>` | Push int onto stack.                                                                                      |
+| push `<INT>`     | Push int onto stack.                                                                                      |
 | pop              | Pop int off  stack.                                                                                       |
+| input            | Read user input                                                                                           |
 | print            | Print top of stack.                                                                                       |
 | printLine        | Print top of stack.                                                                                       |
 | printAscii       | Print top of stack as an ASCII character.                                                                 |
 | label `<LABEL>`  | Used as locations for jumps.                                                                              |
 | j `<LABEL>`      | Jump to label.                                                                                            |
-| je `<LABEL>`     | Pop two off stack. If the two are equal then jump to label.                                               |
-| jn `<LABEL>`     | Pop two off stack. If the two are not equal then jump to label.                                           |
-| jg `<LABEL>`     | Pop two off stack. If the first int is greater than the second int, then jump to label.                   |
-| jge `<LABEL>`    | Pop two off stack. If the first int is greater than or equal to the second int, then jump to label.       |
-| jl `<LABEL>`     | Pop two off stack. If the first int is less than the second int, then jump to label.                      |
-| jle `<LABEL>`    | Pop two off stack. If the first int is less than or equal to the second int, then jump to label.          |
+| je `<LABEL>`     | Jump to label if equal.                                                                                   |
+| jn `<LABEL>`     | Jump to label if not equal.                                                                               |
+| jg `<LABEL>`     | Jump to label if greater than.                                                                            |
+| jge `<LABEL>`    | Jump to label if greater than or equal to.                                                                |
+| jl `<LABEL>`     | Jump to label if less than.                                                                               |
+| jle `<LABEL>`    | Jump to label if less than or equal to.                                                                   |
+
+## Process of jump
+1. Compare two top items on stack
+2. Pop top of stack
+3. Jump to label if comparison is true, otherwise, we carry onto next line.
 
 ## Example
 ```
