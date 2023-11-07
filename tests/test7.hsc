@@ -1,22 +1,22 @@
-push 0
-push 10
-push 33
-push 100
-push 108
-push 114
-push 111
-push 119
-push 32
-push 44
-push 111
-push 108
-push 108
-push 101
-push 72
+pushi 0
+pushi 10
+pushi 33
+pushi 100
+pushi 108
+pushi 114
+pushi 111
+pushi 119
+pushi 32
+pushi 44
+pushi 111
+pushi 108
+pushi 108
+pushi 101
+pushi 72
 
 
 label loop
-printAscii
+printa
 pop
-push 0
+pushi 0
 jn loop

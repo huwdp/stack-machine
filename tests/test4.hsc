@@ -1,3 +1,3 @@
 label main
-push 69
-printLine
+pushi 69
+printl

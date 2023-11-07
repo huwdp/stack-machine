@@ -1,4 +1,4 @@
-push 60
-push 9
-add
-printLine
+pushi 60
+pushi 9
+addi
+printl
