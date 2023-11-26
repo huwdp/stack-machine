@@ -1,7 +1,7 @@
-push 0
+pushi 0
 label main
-push 1
-add
-push 30000000
+pushi 1
+addi
+pushi 200000
 jl main
-printLine
+printl
