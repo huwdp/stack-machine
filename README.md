@@ -11,10 +11,14 @@ Stack contains a list of integers. We run an instruction to interact with the st
 
 | Instruction         | Description                                                                                               |
 | --------------------| --------------------------------------------------------------------------------------------------------- |
-| add                 | Pop two off stack, add the two and push new value onto stack.                                             |
-| sub                 | Pop two off stack, subtract the two and new value push onto stack.                                        |
-| mul                 | Pop two off stack, multiply the two and new value push onto stack.                                        |
-| div                 | Pop two off stack, divide the two and push new value onto stack.                                          |
+| addi                | Pop two off stack, add the two and push new value onto stack. Two numbers must be integer type.           |
+| subi                | Pop two off stack, subtract the two and new value push onto stack. Two numbers must be integer type       |
+| muli                | Pop two off stack, multiply the two and new value push onto stack. Two numbers must be integer type       |
+| divi                | Pop two off stack, divide the two and push new value onto stack. Two numbers must be integer type         |
+| addf                | Pop two off stack, add the two and push new value onto stack. Output will be float type.                  |
+| subf                | Pop two off stack, subtract the two and new value push onto stack. Output will be float type.             |
+| mulf                | Pop two off stack, multiply the two and new value push onto stack. Output will be float type.             |
+| divf                | Pop two off stack, divide the two and push new value onto stack. Output will be float type.               |
 | pushi `<INT>`       | Push int onto stack.                                                                                      |
 | pushf `<FLOAT>`     | Push int onto stack.                                                                                      |
 | pop                 | Pop int off  stack.                                                                                       |
@@ -46,7 +50,7 @@ pushInt 0
 label main
 printLine
 pushInt 1
-add
+addi
 push 10
 jl main
 ```
